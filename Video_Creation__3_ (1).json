@@ -1,0 +1,1101 @@
+{
+  "name": "Video Creation (3)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "7ecbdb05-7e0c-4532-a65f-96947c98e814",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -1320,
+        -220
+      ],
+      "id": "3407f64c-e921-43fe-850a-3b6f08ec3d1b",
+      "name": "Webhook",
+      "webhookId": "7ecbdb05-7e0c-4532-a65f-96947c98e814"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.heygen.com/v2/video/generate",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/json"
+            },
+            {
+              "name": "X-Api-Key",
+              "value": "MmZhODE5Nzk2NTU0NDBkOGFlZTIwOTc5NDIzOTM4ZTUtMTc0NDk3NTQ2Ng=="
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"video_inputs\": [\n    {\n      \"character\": {\n        \"type\": \"avatar\", \n        \"avatar_id\": \"Brandon_Lobby_Standing_Front_public\",\n        \"avatar_style\": \"normal\"\n      },\n      \"voice\": {\n        \"type\": \"text\",\n        \"input_text\": \"{{ $json.ouput.title }}\\n\\n{{ $json.output.hook }}\\n\\n{{ $json.output.main_explanation_1 }}\\n\\n{{ $json.output.main_explanation_2 }}\\n\\n{{ $json.output.main_explanation_3 }}\\n\\n{{ $json.output.benefit_1 }}\\n\\n{{ $json.output.benefit_2 }}\\n\\n{{ $json.output.benefit_3 }}\\n\\n{{ $json.output.call_to_action }}\",\n        \"voice_id\": \"f7bdae9ed8834f5190d056dce1009edf\",\n        \"speed\": 1.1\n      },\n      \"background\": {\n        \"type\": \"image\",\n        \"url\": \"https://wallpaperboat.com/wp-content/uploads/2020/10/23/57974/real-estate-10.jpg\"  \n      }\n    }\n  ],\n  \"dimension\": {\n    \"width\": 720,\n    \"height\": 1280\n  }\n} ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -880,
+        -220
+      ],
+      "id": "5df51c9d-debb-44b7-b556-87af4323f2b3",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9cba05e2-98d6-4e91-9f08-443c4987d2e3",
+              "name": "id",
+              "value": "={{ $('Airtable(Video Pending) 🤖').item.json.id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -220,
+        -220
+      ],
+      "id": "f1a7d662-55ee-483e-9278-d39459246738",
+      "name": "Edit Fields5"
+    },
+    {
+      "parameters": {
+        "jsCode": "/**\n * n8n Function to Parse approvedScript JSON\n * \n * This function extracts script content from a stringified JSON that may be wrapped in markdown code blocks\n * and formats it into a structured output with individual fields.\n */\n\n// Get the approvedScript value from the input\nlet text = $input.first().json.body.approvedScript;\n\n// Clean the text by removing markdown code blocks if present\ntext = text.trim();\nif (text.startsWith(\"```json\")) {\n  text = text.replace(/^```json\\s*/, \"\").replace(/```$/, \"\").trim();\n} else if (text.startsWith(\"```\")) {\n  text = text.replace(/^```\\s*/, \"\").replace(/```$/, \"\").trim();\n}\n\n// Replace escaped newlines with actual newlines (if not already processed)\ntext = text.replace(/\\\\n/g, \"\\n\");\n\ntry {\n  // Ensure the JSON is properly formatted for parsing\n  text = text.replace(/[\"\"]/g, '\"');\n  \n  // Parse the JSON into an object\n  const parsedJson = JSON.parse(text);\n  \n  // FIXED: Access properties directly from parsedJson instead of looking for nested 'script' property\n  return [{\n    json: {\n      output: {\n        keyword: parsedJson.keyword || '',\n        title: parsedJson.title || '',\n        hook: parsedJson.hook || '',\n        main_explanation_1: parsedJson.main_explanation?.[0] || '',\n        main_explanation_2: parsedJson.main_explanation?.[1] || '',\n        main_explanation_3: parsedJson.main_explanation?.[2] || '',\n        benefit_1: parsedJson.use_case_or_benefit?.[0] || '',\n        benefit_2: parsedJson.use_case_or_benefit?.[1] || '',\n        benefit_3: parsedJson.use_case_or_benefit?.[2] || '',\n        call_to_action: parsedJson.call_to_action || ''\n      }\n    }\n  }];\n} catch (err) {\n  // Return error information if parsing fails\n  return [{\n    json: {\n      error: \"Invalid JSON format\",\n      details: err.message,\n      cleanedText: text,  // Include the cleaned text for debugging\n      originalInput: $input.first().json.body.approvedScript // Include original input for debugging\n    }\n  }];\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1100,
+        -220
+      ],
+      "id": "23b5be71-0ac0-4f8a-8c9b-d20f0420b5ad",
+      "name": "Preparing Approved Scripts"
+    },
+    {
+      "parameters": {
+        "operation": "upsert",
+        "base": {
+          "__rl": true,
+          "value": "appNVhIrujfndoHGE",
+          "mode": "list",
+          "cachedResultName": "Creative Asset Management",
+          "cachedResultUrl": "https://airtable.com/appNVhIrujfndoHGE"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblP2MMDX46SQ8osf",
+          "mode": "list",
+          "cachedResultName": "Video Gen Submissions",
+          "cachedResultUrl": "https://airtable.com/appNVhIrujfndoHGE/tblP2MMDX46SQ8osf"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $('Webhook').item.json.body.recordId }}",
+            "videoStatus": "Pending",
+            "video": "={{ $json.data.video_id }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "Business Name",
+              "displayName": "Business Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "IdealCustomer",
+              "displayName": "IdealCustomer",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "targetMarket",
+              "displayName": "targetMarket",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "keywords",
+              "displayName": "keywords",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "preferredAvatar",
+              "displayName": "preferredAvatar",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "preferredVoice",
+              "displayName": "preferredVoice",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "additionalNotes",
+              "displayName": "additionalNotes",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "kewordStatus",
+              "displayName": "kewordStatus",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Awaiting Review",
+                  "value": "Awaiting Review"
+                },
+                {
+                  "name": "Keywords Approved",
+                  "value": "Keywords Approved"
+                },
+                {
+                  "name": "Pending",
+                  "value": "Pending"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "scriptStatus",
+              "displayName": "scriptStatus",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Awaiting Review",
+                  "value": "Awaiting Review"
+                },
+                {
+                  "name": "Script Approved",
+                  "value": "Script Approved"
+                },
+                {
+                  "name": "Pending",
+                  "value": "Pending"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "videoStatus",
+              "displayName": "videoStatus",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Pending",
+                  "value": "Pending"
+                },
+                {
+                  "name": "Awaiting Review",
+                  "value": "Awaiting Review"
+                },
+                {
+                  "name": "Video Approved",
+                  "value": "Video Approved"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "bRollStatus",
+              "displayName": "bRollStatus",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Pending",
+                  "value": "Pending"
+                },
+                {
+                  "name": "Awaiting Review",
+                  "value": "Awaiting Review"
+                },
+                {
+                  "name": "BRoll Approved",
+                  "value": "BRoll Approved"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "thumbnailStatus",
+              "displayName": "thumbnailStatus",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Pending",
+                  "value": "Pending"
+                },
+                {
+                  "name": "Awaiting Review",
+                  "value": "Awaiting Review"
+                },
+                {
+                  "name": "Thumbnail Approved",
+                  "value": "Thumbnail Approved"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "captionsStatus",
+              "displayName": "captionsStatus",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Pending",
+                  "value": "Pending"
+                },
+                {
+                  "name": "Awaiting Review",
+                  "value": "Awaiting Review"
+                },
+                {
+                  "name": "Captions Approved",
+                  "value": "Captions Approved"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "createdBy",
+              "displayName": "createdBy",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "createdDate",
+              "displayName": "createdDate",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "lastUpdated",
+              "displayName": "lastUpdated",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "submissionSummary",
+              "displayName": "submissionSummary",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Next Steps Recommendation",
+              "displayName": "Next Steps Recommendation",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Submission Month",
+              "displayName": "Submission Month",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "Submission Year",
+              "displayName": "Submission Year",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "scripts",
+              "displayName": "scripts",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "video ",
+              "displayName": "video ",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "bRoll",
+              "displayName": "bRoll",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "thumbnail",
+              "displayName": "thumbnail",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Captions,Titles,Descrip,Tags",
+              "displayName": "Captions,Titles,Descrip,Tags",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Video Script",
+              "displayName": "Video Script",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Linkedin Post Description",
+              "displayName": "Linkedin Post Description",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "youtube",
+              "displayName": "youtube",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "instagram",
+              "displayName": "instagram",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "facebook ",
+              "displayName": "facebook ",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "publishingStatus",
+              "displayName": "publishingStatus",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Video Published",
+                  "value": "Video Published"
+                },
+                {
+                  "name": "Ready For Publishing",
+                  "value": "Ready For Publishing"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Status Records 2",
+              "displayName": "Status Records 2",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Suggestions",
+              "displayName": "Suggestions",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Status Records",
+              "displayName": "Status Records",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "video",
+              "displayName": "video",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        -660,
+        -220
+      ],
+      "id": "d1ea87a5-6bd7-4f57-99b2-f4029a1a5510",
+      "name": "Airtable(Video Pending) 🤖",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "4ByRFiQZTQIREYtr",
+          "name": "[Noman] Airtable Personal Access Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workspace": "454570643008941",
+        "name": "Task for Reviewing the Heygen Video",
+        "otherProperties": {
+          "notes": "Please check your Airtable Account for Video Review. https://airtable.com/appNVhIrujfndoHGE/tblP2MMDX46SQ8osf/viwymx1gzpptV0ZOh?blocks=hide",
+          "projects": [
+            "1209939745105647"
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.asana",
+      "typeVersion": 1,
+      "position": [
+        -440,
+        -220
+      ],
+      "id": "03981e6d-e14b-4135-b81a-eb9841600242",
+      "name": "Asana(Video Review) 🤖",
+      "credentials": {
+        "asanaApi": {
+          "id": "qNRwjxyH19ZdpHO1",
+          "name": "[Noman] Asana account "
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "upsert",
+        "base": {
+          "__rl": true,
+          "value": "appNVhIrujfndoHGE",
+          "mode": "list",
+          "cachedResultName": "Creative Asset Management",
+          "cachedResultUrl": "https://airtable.com/appNVhIrujfndoHGE"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblP2MMDX46SQ8osf",
+          "mode": "list",
+          "cachedResultName": "Video Gen Submissions",
+          "cachedResultUrl": "https://airtable.com/appNVhIrujfndoHGE/tblP2MMDX46SQ8osf"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $json.id }}",
+            "videoStatus": "Awaiting Review"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "Updated By",
+              "displayName": "Updated By",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "projectName",
+              "displayName": "projectName",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "keywords",
+              "displayName": "keywords",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "searchVolume",
+              "displayName": "searchVolume",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "CPC",
+              "displayName": "CPC",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "competition",
+              "displayName": "competition",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "competitionIndex",
+              "displayName": "competitionIndex",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "year",
+              "displayName": "year",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "month",
+              "displayName": "month",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "trend",
+              "displayName": "trend",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "source",
+              "displayName": "source",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "project",
+              "displayName": "project",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "videoScript",
+              "displayName": "videoScript",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "heygen",
+              "displayName": "heygen",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "bRoll",
+              "displayName": "bRoll",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "keywordStatus",
+              "displayName": "keywordStatus",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Pending",
+                  "value": "Pending"
+                },
+                {
+                  "name": "Awaiting Review",
+                  "value": "Awaiting Review"
+                },
+                {
+                  "name": "Keywords Approved",
+                  "value": "Keywords Approved"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "scriptStatus",
+              "displayName": "scriptStatus",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Pending",
+                  "value": "Pending"
+                },
+                {
+                  "name": "Awaiting Review",
+                  "value": "Awaiting Review"
+                },
+                {
+                  "name": "Keywords Approved",
+                  "value": "Keywords Approved"
+                }
+              ],
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "videoStatus",
+              "displayName": "videoStatus",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Pending",
+                  "value": "Pending"
+                },
+                {
+                  "name": "Awaiting Review",
+                  "value": "Awaiting Review"
+                },
+                {
+                  "name": "Keywords Approved",
+                  "value": "Keywords Approved"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "bRollStatus",
+              "displayName": "bRollStatus",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Pending",
+                  "value": "Pending"
+                },
+                {
+                  "name": "Awaiting Review",
+                  "value": "Awaiting Review"
+                },
+                {
+                  "name": "Keywords Approved",
+                  "value": "Keywords Approved"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "capcutVideoStatus",
+              "displayName": "capcutVideoStatus",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Pending",
+                  "value": "Pending"
+                },
+                {
+                  "name": "Awaiting Review",
+                  "value": "Awaiting Review"
+                },
+                {
+                  "name": "Keywords Approved",
+                  "value": "Keywords Approved"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Last Updated",
+              "displayName": "Last Updated",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Project ID",
+              "displayName": "Project ID",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        -220
+      ],
+      "id": "2da12e4a-89e8-43ab-89b8-7184797f16cf",
+      "name": "Airtable(Video Awaiting) 🤖",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "4ByRFiQZTQIREYtr",
+          "name": "[Noman] Airtable Personal Access Token"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Airtable(Video Pending) 🤖",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields5": {
+      "main": [
+        [
+          {
+            "node": "Airtable(Video Awaiting) 🤖",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparing Approved Scripts": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Airtable(Video Pending) 🤖": {
+      "main": [
+        [
+          {
+            "node": "Asana(Video Review) 🤖",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Asana(Video Review) 🤖": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Preparing Approved Scripts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "a827bb82-164d-451b-9913-f52750ba7084",
+  "meta": {
+    "instanceId": "aec523c53a8ccca3226cf36d63bacc49b76e8e3ea435f0c7e644b5c591546acc"
+  },
+  "id": "6NBHGBdJLdq3jZeK",
+  "tags": []
+}
