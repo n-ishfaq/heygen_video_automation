@@ -1,0 +1,579 @@
+{
+  "name": "Scripts Creation (2)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "0badd3c9-8ee7-4085-9d5b-111d38423922",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -780,
+        -220
+      ],
+      "id": "c8eea652-342f-4f07-b8f5-20f7b914efe4",
+      "name": "Webhook",
+      "webhookId": "0badd3c9-8ee7-4085-9d5b-111d38423922"
+    },
+    {
+      "parameters": {
+        "content": "## Take Approveed keywords + Generate Script\n\n",
+        "height": 400,
+        "width": 1720,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -852,
+        -260
+      ],
+      "id": "5a13108b-9567-42d6-a2fe-7557196cd7d3",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9cba05e2-98d6-4e91-9f08-443c4987d2e3",
+              "name": "id",
+              "value": "={{ $('Airtable(Scripts Pending) 🤖').item.json.id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        476,
+        -220
+      ],
+      "id": "55fa2c38-ad34-40c7-adbb-a27451d1d879",
+      "name": "Edit Fields3"
+    },
+    {
+      "parameters": {
+        "operation": "upsert",
+        "base": {
+          "__rl": true,
+          "value": "appNVhIrujfndoHGE",
+          "mode": "list",
+          "cachedResultName": "Creative Asset Management",
+          "cachedResultUrl": "https://airtable.com/appNVhIrujfndoHGE"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblSxEvzmjLTcIv5C",
+          "mode": "list",
+          "cachedResultName": "Script Table",
+          "cachedResultUrl": "https://airtable.com/appNVhIrujfndoHGE/tblSxEvzmjLTcIv5C"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $('Webhook').item.json.body.scriptsTableRecordId }}",
+            "scriptStatus": "Pending",
+            "script": "={{ JSON.stringify($json.output[0].script) }}",
+            "Video Gen Submissions": "=[\"{{ $('Airtable').item.json.id }}\"]"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "Script Id",
+              "displayName": "Script Id",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "script",
+              "displayName": "script",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "scriptStatus",
+              "displayName": "scriptStatus",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Awaiting Review",
+                  "value": "Awaiting Review"
+                },
+                {
+                  "name": "Script Approved",
+                  "value": "Script Approved"
+                },
+                {
+                  "name": "Pending",
+                  "value": "Pending"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Video Gen Submissions",
+              "displayName": "Video Gen Submissions",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "lastUpdated",
+              "displayName": "lastUpdated",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "Updated By",
+              "displayName": "Updated By",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        36,
+        -220
+      ],
+      "id": "2e7de23b-2561-4edd-8473-840952d7fddf",
+      "name": "Airtable(Scripts Pending) 🤖",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "4ByRFiQZTQIREYtr",
+          "name": "[Noman] Airtable Personal Access Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workspace": "454570643008941",
+        "name": "Task for Reviewing the Video Scripts",
+        "otherProperties": {
+          "notes": "Please check your Airtable Account for Scripts Review. https://airtable.com/appNVhIrujfndoHGE/tblP2MMDX46SQ8osf/viwymx1gzpptV0ZOh?blocks=hide",
+          "projects": [
+            "1209939745105647"
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.asana",
+      "typeVersion": 1,
+      "position": [
+        260,
+        -220
+      ],
+      "id": "c40179ac-59e4-4f25-861e-fc697c4b6d4c",
+      "name": "Asana(Video Script Review) 🤖",
+      "credentials": {
+        "asanaApi": {
+          "id": "qNRwjxyH19ZdpHO1",
+          "name": "[Noman] Asana account "
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "upsert",
+        "base": {
+          "__rl": true,
+          "value": "appNVhIrujfndoHGE",
+          "mode": "list",
+          "cachedResultName": "Creative Asset Management",
+          "cachedResultUrl": "https://airtable.com/appNVhIrujfndoHGE"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblSxEvzmjLTcIv5C",
+          "mode": "list",
+          "cachedResultName": "Script Table",
+          "cachedResultUrl": "https://airtable.com/appNVhIrujfndoHGE/tblSxEvzmjLTcIv5C"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $json.id }}",
+            "scriptStatus": "Awaiting Review"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true
+            },
+            {
+              "id": "Script Id",
+              "displayName": "Script Id",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "script",
+              "displayName": "script",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "scriptStatus",
+              "displayName": "scriptStatus",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Awaiting Review",
+                  "value": "Awaiting Review"
+                },
+                {
+                  "name": "Script Approved",
+                  "value": "Script Approved"
+                },
+                {
+                  "name": "Pending",
+                  "value": "Pending"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Video Gen Submissions",
+              "displayName": "Video Gen Submissions",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "lastUpdated",
+              "displayName": "lastUpdated",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "Updated By",
+              "displayName": "Updated By",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        700,
+        -220
+      ],
+      "id": "fa94165d-24a8-4ce5-94dc-a7e0765ea878",
+      "name": "Airtable(Scripts Awaiting) 🤖",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "4ByRFiQZTQIREYtr",
+          "name": "[Noman] Airtable Personal Access Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "base": {
+          "__rl": true,
+          "value": "appNVhIrujfndoHGE",
+          "mode": "list",
+          "cachedResultName": "Creative Asset Management",
+          "cachedResultUrl": "https://airtable.com/appNVhIrujfndoHGE"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblP2MMDX46SQ8osf",
+          "mode": "list",
+          "cachedResultName": "Video Gen Submissions",
+          "cachedResultUrl": "https://airtable.com/appNVhIrujfndoHGE/tblP2MMDX46SQ8osf"
+        },
+        "id": "={{ $json.body.recordId }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        -560,
+        -220
+      ],
+      "id": "a9f694fe-e5d3-4e54-960c-4f1a7ce622bb",
+      "name": "Airtable",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "4ByRFiQZTQIREYtr",
+          "name": "[Noman] Airtable Personal Access Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Here is the top performing keywords,Company name and Company website respectively. {{ $('Webhook').item.json.body.approvedKeyword }},{{ $json['Business Name'] }} and {{ $json['Business Website'] }}  ",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=✅ System Prompt for HeyGen AI Video Script (1-Minute Company Promo)\n\nYou are a professional video-scriptwriter specialized in 1-minute HeyGen avatar videos. Your goal is to craft two distinct, under-150-word scripts—each optimized to rank for a given SEO keyword and to promote a specific company, product, or service.\n\nWhen I provide:\n- Company Name\n- Company Website\n- One or more SEO Keywords (e.g. “Zillow Boston MA”, “Jamaica Plain Real Estate”)\n\nYou must:\n1. **Research & Align**  \n   - Quickly review the company site for services, trust signals (reviews, awards, years in business).  \n   - Understand the keyword’s search intent (buy, rent, sell, service).  \n\n2. **Structure Each Script in JSON**  \n   ```json\n   {\n     \"keyword\": \"<exact SEO keyword>\",\n     \"script\": {\n       \"title\": \"<Keyword-centric title>\",\n       \"hook\": \"<1–2 short sentences that grab attention & include the keyword>\",\n       \"main_explanation\": [\n         \"<1–2 sentences defining the keyword’s meaning>\",\n         \"<1 sentence introducing the company & its core offering>\",\n         \"<1 sentence tying that offering back to the keyword>\"\n       ],\n       \"use_case_or_benefit\": [\n         \"<1 sentence on how the company solves a pain point>\",\n         \"<1 sentence highlighting a trust factor (reviews, case study, years of experience)>\",\n         \"<optional bonus sentence: unique feature or guarantee>\"\n       ],\n       \"call_to_action\": \"<1 concise, action-oriented sentence (visit site, call now, learn more)>\"\n     }\n   }\n````\n\n3. **Stylistic Rules**\n\n   * **Length:** \\~1 minute spoken (\\~120–150 words)\n   * **Tone:** Friendly, persuasive, confident, professional\n   * **Sentences:** Short, on-screen friendly (no more than 20 words each)\n   * **Variations:** Create two fully distinct scripts per keyword (label them “Script 1” and “Script 2”)\n   * **SEO:** Weave the exact keyword into the hook and title, and at least once in the body\n\n4. **Call to Action:** Always end with a direct CTA: “Visit \\[website] to…,” “Call \\[phone],” or “Click to learn more.”\n\n🎯 Example Input:\nCompany: Green Ocean Property Management (GOPM)\nWebsite: greenoceanpm.com\nKeyword: “Zillow Boston MA”\n\n—Your response must be valid JSON with two script objects as defined above."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [
+        -340,
+        -220
+      ],
+      "id": "a768303b-64fb-480c-a29f-900cb7fc12a8",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list",
+          "cachedResultName": "gpt-4.1"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -312,
+        0
+      ],
+      "id": "409a8ccf-e280-49f9-bc98-015329a5449e",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "IGhDC8lrbVNkdOw4",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "[\n  {\n    \"keyword\": \"Newton Massachusetts Property\",\n    \"script\": {\n      \"title\": \"Newton Massachusetts Property - Script 1\",\n      \"hook\": \"Thinking of moving to Newton, Massachusetts? Let me show you why it might just be the best decision you’ll ever make.\",\n      \"main_explanation\": [\n        \"Hi, I’m the CEO of Green Ocean Property Management.\",\n        \"We’ve helped hundreds of people find their dream homes right here in Newton.\",\n        \"It’s more than just a beautiful neighborhood – Newton offers safety, incredible schools, parks, and a lifestyle that fits every stage of life.\"\n      ],\n      \"use_case_or_benefit\": [\n        \"One of our recent clients called their move “the smoothest experience ever.”\",\n        \"With over 950 five-star reviews on Google, our track record speaks for itself.\",\n        \"Whether you're a first-time buyer or relocating, we make the process easy, personal, and genuinely rewarding.\"\n      ],\n      \"call_to_action\": \"So reach out today – let’s find your perfect home in Newton together.\"\n    }\n  },\n  {\n    \"keyword\": \"Newton Massachusetts Property\",\n    \"script\": {\n      \"title\": \"Newton Massachusetts Property - Script 2\",\n      \"hook\": \"Searching for a forever home in Newton, Massachusetts? You deserve more than just a listing—you deserve trusted guidance.\",\n      \"main_explanation\": [\n        \"I'm the CEO of Green Ocean Property Management, on a mission to make moving stress-free and meaningful.\",\n        \"Newton isn’t just a town – it’s where families thrive, careers grow, and communities feel like home.\",\n        \"We bring over a decade of experience, local insight, and one-on-one service to every client.\"\n      ],\n      \"use_case_or_benefit\": [\n        \"Clients often tell us how our team made them feel heard, supported, and excited – not overwhelmed.\",\n        \"That’s why we’ve earned more than 950 glowing reviews online.\",\n        \"From showing properties to managing every detail, we’re with you start to finish.\"\n      ],\n      \"call_to_action\": \"Let’s take the first step toward your Newton home – contact Green Ocean Property Management today.\"\n    }\n  }\n]"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        -192,
+        0
+      ],
+      "id": "03acdd9b-a7f4-4818-8d47-78d2e74b91bb",
+      "name": "Structured Output Parser"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Edit Fields3": {
+      "main": [
+        [
+          {
+            "node": "Airtable(Scripts Awaiting) 🤖",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Airtable(Scripts Pending) 🤖": {
+      "main": [
+        [
+          {
+            "node": "Asana(Video Script Review) 🤖",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Asana(Video Script Review) 🤖": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Airtable(Scripts Awaiting) 🤖": {
+      "main": [
+        []
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Airtable",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Airtable": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Airtable(Scripts Pending) 🤖",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "d90d1745-00b7-456c-802e-1298e9ec412c",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "aec523c53a8ccca3226cf36d63bacc49b76e8e3ea435f0c7e644b5c591546acc"
+  },
+  "id": "ZTbQKMAhwZpzZF8e",
+  "tags": [
+    {
+      "createdAt": "2025-05-20T19:49:08.872Z",
+      "updatedAt": "2025-05-20T19:49:08.872Z",
+      "id": "5bS4S4yuAwFSNblL",
+      "name": "video automation"
+    },
+    {
+      "createdAt": "2025-05-02T13:25:05.710Z",
+      "updatedAt": "2025-05-02T13:25:05.710Z",
+      "id": "kWKULkTTZUbVdkvf",
+      "name": "Noman"
+    },
+    {
+      "createdAt": "2025-05-25T14:33:10.877Z",
+      "updatedAt": "2025-05-25T14:33:10.877Z",
+      "id": "DfGj8knhwpkvaLSz",
+      "name": "Reviewed"
+    }
+  ]
+}
