@@ -1,0 +1,465 @@
+{
+  "name": "Captions Creation (4)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "c505606f-4a77-4c2b-b894-28625d7fb785",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -340,
+        -80
+      ],
+      "id": "e81bb749-3a77-4222-8694-1da8e322f2a3",
+      "name": "Webhook",
+      "webhookId": "c505606f-4a77-4c2b-b894-28625d7fb785"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Here is the script of video \nwhich you will use{{ $json.body.approvedScript }}",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "\nYou are a professional marketing script generator for social media platforms. Based on the given keyword and associated script content (hook, main explanation, benefits, and call-to-action), generate two copies of high-converting social media video titles, descriptions,captions and tags for the following platforms:\n\nPlatforms: Facebook, Instagram, LinkedIn, TikTok, YouTube\n\n📌 Instructions:\nAdapt tone and formatting for each platform’s audience\n\nTitle:\n\nCatchy, clear, keyword-rich\n\nLimit to under 80 characters\n\nDescription:\n\nUse hook, 1–2 key benefits, and call to action\n\nUse line breaks and emojis where appropriate (especially for Instagram and TikTok)\n\nLimit to 2–4 lines\n\nCaption:\n\nShould summarize or tease the video content\n\nUse tone/language that fits the platform\n\nInclude emoji usage where suitable\n\nMay contain 1–2 relevant hashtags \n\n  Output format: {\n  \"Facebook\": {\n    \"title\": \"...\",\n    \"description\": \"...\",\n    \"caption\": \"...\",\n\"tags\":\"...\"\n  },\n  \"Instagram\": {\n    \"title\": \"...\",\n    \"description\": \"...\",\n    \"caption\": \"...\",\n\"tags\":\"...\"\n  },\n  \"LinkedIn\": {\n    \"title\": \"...\",\n    \"description\": \"...\",\n    \"caption\": \"...\",\n\"tags\":\"...\"\n  },\n \n  \"YouTube1\": {\n    \"title\": \"...\",\n    \"description\": \"...\",\n    \"caption\": \"...\",\n    \"tags\":\"...\"\n  }\n \"Facebook1\": {\n    \"title\": \"...\",\n    \"description\": \"...\",\n    \"caption\": \"...\",\n\"tags\":\"...\"\n  },\n  \"Instagram1\": {\n    \"title\": \"...\",\n    \"description\": \"...\",\n    \"caption\": \"...\",\n\"tags\":\"...\"\n  },\n  \"LinkedIn1\": {\n    \"title\": \"...\",\n    \"description\": \"...\",\n    \"caption\": \"...\",\n\"tags\":\"...\"\n  },\n \n  \"YouTube1\": {\n    \"title\": \"...\",\n    \"description\": \"...\",\n    \"caption\": \"...\",\n    \"tags\":\"...\"\n  }\n\n}\n"
+            }
+          ]
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.6,
+      "position": [
+        0,
+        -60
+      ],
+      "id": "e75d877a-b49f-4c71-9918-1661252bb49d",
+      "name": "Basic LLM Chain2"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        160,
+        140
+      ],
+      "id": "0e194cb9-7352-4aef-9a90-22cf0ba0abb7",
+      "name": "Google Gemini Chat Model2",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "36zDqsyfyaeQSevs",
+          "name": "Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9cba05e2-98d6-4e91-9f08-443c4987d2e3",
+              "name": "id",
+              "value": "={{ $('Airtable(CaptionsPending)🤖').item.json.id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        980,
+        -40
+      ],
+      "id": "bbaa4607-aec6-47f5-aff5-93286c7a922f",
+      "name": "Edit Fields8"
+    },
+    {
+      "parameters": {
+        "workspace": "454570643008941",
+        "name": "Task for Reviewing Captions.",
+        "otherProperties": {
+          "notes": "Please check your Airtable Account for Captions. https://airtable.com/appNVhIrujfndoHGE/tblP2MMDX46SQ8osf/viwymx1gzpptV0ZOh?blocks=hide",
+          "projects": [
+            "1209939745105647"
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.asana",
+      "typeVersion": 1,
+      "position": [
+        760,
+        -40
+      ],
+      "id": "9f141206-d7a4-4435-930e-0e874cf3aeed",
+      "name": "Asana(Captions Review)🤖",
+      "credentials": {
+        "asanaApi": {
+          "id": "qNRwjxyH19ZdpHO1",
+          "name": "[Noman] Asana account "
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "base": {
+          "__rl": true,
+          "value": "appNVhIrujfndoHGE",
+          "mode": "list",
+          "cachedResultName": "Creative Asset Management",
+          "cachedResultUrl": "https://airtable.com/appNVhIrujfndoHGE"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblVcYBiEAWCsvuad",
+          "mode": "list",
+          "cachedResultName": "Caption Table",
+          "cachedResultUrl": "https://airtable.com/appNVhIrujfndoHGE/tblVcYBiEAWCsvuad"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $('Webhook').item.json.body.captionsId }}",
+            "Captions": "={{ $json.text }}",
+            "captionsStatus": "Pending"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true
+            },
+            {
+              "id": "Caption ID",
+              "displayName": "Caption ID",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "Captions",
+              "displayName": "Captions",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "captionsStatus",
+              "displayName": "captionsStatus",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Pending",
+                  "value": "Pending"
+                },
+                {
+                  "name": "Awaiting Review",
+                  "value": "Awaiting Review"
+                },
+                {
+                  "name": "Captions Approved",
+                  "value": "Captions Approved"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Status Records",
+              "displayName": "Status Records",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "lastUpdated",
+              "displayName": "lastUpdated",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "updatedBy",
+              "displayName": "updatedBy",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        460,
+        -60
+      ],
+      "id": "bc0e2059-7c60-451e-88fb-92fd5c4da7cb",
+      "name": "Airtable(CaptionsPending)🤖",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "4ByRFiQZTQIREYtr",
+          "name": "[Noman] Airtable Personal Access Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "upsert",
+        "base": {
+          "__rl": true,
+          "value": "appNVhIrujfndoHGE",
+          "mode": "list",
+          "cachedResultName": "Creative Asset Management",
+          "cachedResultUrl": "https://airtable.com/appNVhIrujfndoHGE"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblVcYBiEAWCsvuad",
+          "mode": "list",
+          "cachedResultName": "Caption Table",
+          "cachedResultUrl": "https://airtable.com/appNVhIrujfndoHGE/tblVcYBiEAWCsvuad"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $json.id }}",
+            "captionsStatus": "Awaiting Review"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true
+            },
+            {
+              "id": "Caption ID",
+              "displayName": "Caption ID",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "Captions",
+              "displayName": "Captions",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "captionsStatus",
+              "displayName": "captionsStatus",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Pending",
+                  "value": "Pending"
+                },
+                {
+                  "name": "Awaiting Review",
+                  "value": "Awaiting Review"
+                },
+                {
+                  "name": "Captions Approved",
+                  "value": "Captions Approved"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Status Records",
+              "displayName": "Status Records",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "lastUpdated",
+              "displayName": "lastUpdated",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "updatedBy",
+              "displayName": "updatedBy",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        1180,
+        -40
+      ],
+      "id": "61e41d75-9959-4cef-87e0-fb82bcb62f51",
+      "name": "Airtable(Captions Awaiting) 🤖",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "4ByRFiQZTQIREYtr",
+          "name": "[Noman] Airtable Personal Access Token"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Basic LLM Chain2": {
+      "main": [
+        [
+          {
+            "node": "Airtable(CaptionsPending)🤖",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain2",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields8": {
+      "main": [
+        [
+          {
+            "node": "Airtable(Captions Awaiting) 🤖",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Asana(Captions Review)🤖": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields8",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Airtable(CaptionsPending)🤖": {
+      "main": [
+        [
+          {
+            "node": "Asana(Captions Review)🤖",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "bedbdb5a-0006-4b81-9b1d-bc9c9392dcb9",
+  "meta": {
+    "instanceId": "aec523c53a8ccca3226cf36d63bacc49b76e8e3ea435f0c7e644b5c591546acc"
+  },
+  "id": "eXgt5r4pXyD225WF",
+  "tags": []
+}
